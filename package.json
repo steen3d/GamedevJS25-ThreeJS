@@ -1,0 +1,20 @@
+{
+  "name": "GamedevJS25-ThreeJS",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "@hayes0724/web-font-converter": "^1.0.5",
+    "lil-gui": "^0.20.0",
+    "three": "^0.174.0",
+    "vite-plugin-restart": "^0.4.2"
+  }
+}
