@@ -99,7 +99,7 @@ const gltfLoader = new GLTFLoader();
 
 const lamp = null;
 gltfLoader.load(
-    '/models/FloorLamp/FloorLamp.gltf',
+    'models/FloorLamp/FloorLamp.gltf',
     (gltf) =>
     {
     gltf.scene.children[0].castShadow = true;
