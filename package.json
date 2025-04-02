@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --base=steen3d.github.io/GamedevJS25-ThreeJS/",
     "preview": "vite preview"
   },
   "devDependencies": {
