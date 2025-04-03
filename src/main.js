@@ -5,6 +5,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import GUI from 'lil-gui'
 import { gsap } from "gsap";
 import * as CANNON from 'cannon-es'
+import { threeToCannon, ShapeType } from 'three-to-cannon';
 
 // Debug
 const gui = new GUI();
@@ -15,9 +16,9 @@ debugObject.createSphere = () =>
     createSphere(
         Math.random() * 0.5, 
         {
-            x: Math.random() - 0.5 * 3, 
-            y: 3, 
-            z: Math.random() - 0.5 * 3
+            x: (Math.random() - 0.5) * 3, 
+            y: 5, 
+            z: (Math.random() - 0.5) * 3
         }
     )
 }
@@ -186,21 +187,31 @@ const playHitSound = (collision) =>
 
 const objectsToUpdate = [];
 
+const generateCollision = (mesh, body) => {
+  const collisionMesh = threeToCannon(mesh, {type: ShapeType.HULL});
+  console.log('Collision Mesh ' + collisionMesh);
+  console.log(mesh, body);
+  body.addShape(collisionMesh.shape);
+}
+
+
+// const cannonDebugRenderer = new THREE.Cann
+
+/**
+ * Objects
+ */
+
 const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
 const sphereMaterial = new THREE.MeshStandardMaterial({
         metalness: 0.3,
         roughness: 0.4
 })
 
-/**
- * Objects
- */
-
 // Sphere
 const createSphere = (radius, position) =>
   {
       // Three.js mesh
-      const mesh = new THREE.Mesh( sphereGeometry, sphereMaterial )
+      const mesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
       mesh.castShadow = true;
       mesh.scale.set( radius, radius, radius );
       mesh.position.copy(position)
@@ -240,10 +251,12 @@ rgbeLoader.load('textures/environmentMap/2k.hdr',
 
 // Materials
 const material = new THREE.MeshStandardMaterial({color: '#999999', wireframe: true});
+const materialMetal = new THREE.MeshStandardMaterial({color: '#444444', metalness: 1, roughness: 0.3});
 
 // Models
 const gltfLoader = new GLTFLoader();
 
+const importedMeshes = new THREE.Group();
 const lamp = null;
 gltfLoader.load(
     'models/FloorLamp/FloorLamp.gltf',
@@ -251,10 +264,34 @@ gltfLoader.load(
     {
     gltf.scene.children[0].castShadow = true;
     gltf.scene.children[0].receiveShadowShadow = true;
-    scene.add(gltf.scene);
+    gltf.scene.children[0].position.y = 0.532;
+
+    importedMeshes.add(gltf.scene);
     }
 )
 
+const hexTilesBody = new CANNON.Body();
+gltfLoader.load(
+    'models/HexTiles.glb',
+    (gltf) =>
+    {
+    console.log(gltf)
+
+    gltf.scene.children.forEach((mesh) => {
+      mesh.material = materialMetal;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      generateCollision(mesh, hexTilesBody);
+    })
+    scene.add(gltf.scene);
+    }
+)
+world.addBody(hexTilesBody);
+scene.add(importedMeshes);
+gui.add(importedMeshes.position, 'y').min(-10).max(10).step(0.001).name('Mesh Group Y Pos');
+
+
+console.log(scene);
 
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(10, 10),
@@ -266,7 +303,7 @@ const floor = new THREE.Mesh(
 )
 floor.receiveShadow = true
 floor.rotation.x = - Math.PI * 0.5
-scene.add(floor)
+// scene.add(floor)
 
 // Lights
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8)
