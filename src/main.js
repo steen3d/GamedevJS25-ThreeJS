@@ -16,9 +16,20 @@ window.addEventListener('keydown', (event) => {
     }
 })
 
+
+// Toggle Panel
 const panel = document.querySelector('.panel');
-console.log(panel);
-gsap.to(panel, { x: 100, duration: 1});
+panel.active = true;
+panel.addEventListener('click', () => {
+  if (panel.active){
+    gsap.to(panel, { y: (-panel.offsetHeight + 15), duration: 1});
+    panel.active = false;
+  } else {
+    gsap.to(panel, { y: 0, duration: 1});
+    panel.active = true;
+  }
+})
+
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
