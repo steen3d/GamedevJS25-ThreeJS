@@ -164,7 +164,7 @@ world.addBody(floorBody);
  * Sound
  */
 
-const hitSound = new Audio('/sounds/hit.mp3');
+const hitSound = new Audio('sounds/hit.mp3');
 
 const playHitSound = (collision) =>
 {
