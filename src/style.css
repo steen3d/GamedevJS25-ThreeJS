@@ -65,6 +65,20 @@ h1 {
   user-select: none;
 }
 
+.open {
+  text-align: center;
+  position: relative;
+  bottom: -35px;
+}
+
+.close {
+  position: absolute;
+  outline: 2px solid;
+  padding: .25rem;
+  right: 20px;
+  top: 10px;
+}
+
 @media screen and (min-width: 550px){
   .content-container {
     flex-direction: row;
