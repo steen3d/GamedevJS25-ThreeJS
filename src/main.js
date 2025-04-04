@@ -257,7 +257,7 @@ const materialMetal = new THREE.MeshStandardMaterial({color: '#444444', metalnes
 const gltfLoader = new GLTFLoader();
 
 const importedMeshes = new THREE.Group();
-const lamp = null;
+const lampBody = new CANNON.Body();
 gltfLoader.load(
     'models/FloorLamp/FloorLamp.gltf',
     (gltf) =>
@@ -265,10 +265,12 @@ gltfLoader.load(
     gltf.scene.children[0].castShadow = true;
     gltf.scene.children[0].receiveShadowShadow = true;
     gltf.scene.children[0].position.y = 0.532;
+    generateCollision(gltf.scene.children[0], lampBody);
 
     importedMeshes.add(gltf.scene);
     }
 )
+world.addBody(lampBody);
 
 const hexTilesBody = new CANNON.Body();
 gltfLoader.load(
